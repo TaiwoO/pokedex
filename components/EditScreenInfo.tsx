@@ -3,13 +3,14 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 
 import Colors from '../constants/Colors';
-import { MonoText } from './StyledText';
+import { MonoText, PokeText } from './StyledText';
 import { Text, View } from './Themed';
 
 export default function EditScreenInfo({ path }: { path: string }) {
   return (
     <View>
       <View style={styles.getStartedContainer}>
+        <PokeText>PokeDex</PokeText>
         <Text
           style={styles.getStartedText}
           lightColor="rgba(0,0,0,0.8)"
