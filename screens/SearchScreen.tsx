@@ -1,17 +1,21 @@
 import { FontAwesome } from "@expo/vector-icons";
 import * as React from "react";
-import { Image, StyleSheet, TextInput } from "react-native";
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  TextInput,
+  RefreshControl,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import useColorScheme from "../hooks/useColorScheme";
+import usePokemonEntries from "../hooks/usePokemonEntries";
 import { RootTabScreenProps } from "../types";
 
 import Colors from "../constants/Colors";
-interface PokemonEntry {
-  name: string;
-  spriteUrl: string;
-}
+import PokemonListItem from "../components/PokemonListItem";
 
 export default function SearchScreen({
   navigation,
@@ -19,15 +23,30 @@ export default function SearchScreen({
   const colorScheme = useColorScheme();
   const [search, setSearch] = React.useState("");
 
+  const [pokemonEntries, isLoading, error, refresh] = usePokemonEntries();
+  const [filteredEntries, setfilteredEntries] = React.useState<
+    typeof pokemonEntries
+  >([]);
+
+  React.useEffect(() => {
+    const filtered = pokemonEntries.filter((entry) => {
+      const filter = search.trim().toLowerCase();
+      return entry.name.toLowerCase().startsWith(filter);
+    });
+
+    setfilteredEntries(filtered);
+  }, [search, pokemonEntries]);
+
   return (
     // <SafeAreaView style={{ flex: 1 }}>
     <View style={styles.container}>
-      <View darkColor="#1F2933">
+      <View darkColor={Colors[colorScheme].header}>
+        {/* Search Bar */}
         <View style={[styles.searchBar]}>
           <FontAwesome
             name="search"
             color={Colors[colorScheme].text}
-            size={20}
+            size={15}
           />
 
           <TextInput
@@ -41,6 +60,25 @@ export default function SearchScreen({
           />
         </View>
       </View>
+
+      {/* Search Results */}
+      <FlatList
+        data={filteredEntries}
+        renderItem={({ item }) => (
+          <PokemonListItem name={item.name} spriteUrl={item.spriteUrl} />
+        )}
+        ItemSeparatorComponent={() => (
+          <View
+            style={styles.separator}
+            lightColor="#eee"
+            darkColor="rgba(255,255,255,0.1)"
+          />
+        )}
+        keyExtractor={(item) => item.name}
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={refresh} />
+        }
+      />
     </View>
     // </SafeAreaView>
   );
@@ -57,17 +95,16 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: "row",
     alignSelf: "center",
-    borderRadius: 7,
+    borderRadius: 12,
     alignItems: "center",
     marginVertical: 8,
     paddingHorizontal: 12,
   },
   searchBar__icon: {},
   searchBar__input: {
-    marginLeft: 16,
     width: "70%",
     paddingHorizontal: 14,
-    paddingVertical: 12,
+    paddingVertical: 14,
   },
 
   card: {
@@ -80,5 +117,11 @@ const styles = StyleSheet.create({
     shadowRadius: 1.0,
 
     elevation: 1,
+  },
+
+  separator: {
+    // marginVertical: 30,
+    height: 1,
+    width: "100%",
   },
 });
