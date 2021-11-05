@@ -36,7 +36,7 @@ export default function Navigation({
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
     >
       <RootNavigator />
     </NavigationContainer>
@@ -82,7 +82,7 @@ function BottomTabNavigator() {
     <BottomTab.Navigator
       initialRouteName="Search"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: Colors[colorScheme].tabIconSelected,
         headerTitle: (props) => (
           <Image
             style={{
@@ -93,8 +93,11 @@ function BottomTabNavigator() {
           />
         ),
         headerStyle: {
-          backgroundColor: Colors[colorScheme].header
-        }
+          backgroundColor: Colors[colorScheme].header,
+        },
+        tabBarStyle: {
+          backgroundColor: Colors[colorScheme].header,
+        },
         // headerShown: false,
       }}
     >

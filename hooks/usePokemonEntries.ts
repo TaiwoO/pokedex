@@ -1,10 +1,17 @@
 import * as React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { PokemonClient } from "pokenode-ts";
+
 interface PokemonEntry {
   name: string;
+  number: number;
   spriteUrl: string;
 }
+
+const getFrontImageUrl = (id: number): string => {
+  return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
+};
 
 export default function usePokemonEntries() {
   const [data, setData] = React.useState<PokemonEntry[]>([]);
@@ -25,32 +32,30 @@ export default function usePokemonEntries() {
     try {
       const savedEntries = await AsyncStorage.getItem("pokemonEntries");
       if (savedEntries) {
-        console.log("Retrieving Saved entries");
+        console.log("Retrieving Pokemon Entries from Storage");
         setData(JSON.parse(savedEntries));
       } else {
-        // get data.
         console.log("Fetching Fresh entries");
-        let pokemonEntries: PokemonEntry[] = [
-          {
-            name: "Squrruial",
-            spriteUrl:
-              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-          },
-          {
-            name: "dragon",
-            spriteUrl:
-              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png",
-          },
-          {
-            name: "nooooo",
-            spriteUrl:
-              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/30.png",
-          },
-        ];
+
+        const pokemonApi = new PokemonClient();
+
+        const totalCount = await pokemonApi
+          .listPokemons(0, 1)
+          .then((res) => res.count);
+
+        const pokemonEntries: PokemonEntry[] = await pokemonApi
+          .listPokemons(0, totalCount)
+          .then((res) => {
+            return res.results.map((item, index) => ({
+              name: item.name,
+              number: index + 1,
+              spriteUrl: getFrontImageUrl(index + 1),
+            }));
+          });
 
         const jsonValue = JSON.stringify(pokemonEntries);
         await AsyncStorage.setItem("pokemonEntries", jsonValue);
-        setData(JSON.parse(jsonValue))
+        setData(JSON.parse(jsonValue));
       }
     } catch (e) {
       console.error(e);

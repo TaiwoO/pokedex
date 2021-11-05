@@ -7,12 +7,18 @@ import useColorScheme from "../hooks/useColorScheme";
 
 interface Props {
   name: string;
+  number: number | string;
   spriteUrl?: string;
 }
 
-export default function PokemonListItem({ name, spriteUrl }: Props) {
+export default React.memo(function PokemonListItem({
+  name,
+  number,
+  spriteUrl,
+}: Props) {
   const colorScheme = useColorScheme();
 
+  console.log("rendering: ", name);
   return (
     <View style={styles.container}>
       <Image
@@ -22,14 +28,17 @@ export default function PokemonListItem({ name, spriteUrl }: Props) {
         style={[
           styles.image,
           {
-            backgroundColor: Colors[colorScheme].tint,
+            backgroundColor: Colors[colorScheme].grey_800,
           },
         ]}
       />
-      <Text>{name}</Text>
+      <View>
+        <Text>{name}</Text>
+        <Text style={{opacity:.4}}>#{number}</Text>
+      </View>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

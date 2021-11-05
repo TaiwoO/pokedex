@@ -31,7 +31,10 @@ export default function SearchScreen({
   React.useEffect(() => {
     const filtered = pokemonEntries.filter((entry) => {
       const filter = search.trim().toLowerCase();
-      return entry.name.toLowerCase().startsWith(filter);
+      return (
+        parseInt(filter) === entry.number ||
+        entry.name.toLowerCase().includes(filter)
+      );
     });
 
     setfilteredEntries(filtered);
@@ -55,7 +58,7 @@ export default function SearchScreen({
               { color: Colors[colorScheme].text },
             ]}
             onChangeText={(x) => setSearch(x)}
-            placeholder="Enter pokemon name"
+            placeholder="Enter pokemon name or number"
             value={search}
           />
         </View>
@@ -65,7 +68,11 @@ export default function SearchScreen({
       <FlatList
         data={filteredEntries}
         renderItem={({ item }) => (
-          <PokemonListItem name={item.name} spriteUrl={item.spriteUrl} />
+          <PokemonListItem
+            name={item.name}
+            number={item.number}
+            spriteUrl={item.spriteUrl}
+          />
         )}
         ItemSeparatorComponent={() => (
           <View
