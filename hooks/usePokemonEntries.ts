@@ -44,12 +44,13 @@ export default function usePokemonEntries() {
           {
             name: "nooooo",
             spriteUrl:
-              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/40.png",
+              "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/30.png",
           },
         ];
 
         const jsonValue = JSON.stringify(pokemonEntries);
         await AsyncStorage.setItem("pokemonEntries", jsonValue);
+        setData(JSON.parse(jsonValue))
       }
     } catch (e) {
       console.error(e);
