@@ -1,11 +1,11 @@
 import React from "react";
-import { Image, StyleSheet } from "react-native";
+import { Image, StyleSheet, PressableProps, Pressable } from "react-native";
 import { Text, View } from "../components/Themed";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 
-interface Props {
+interface Props extends PressableProps {
   name: string;
   number: number | string;
   spriteUrl?: string;
@@ -15,12 +15,12 @@ export default React.memo(function PokemonListItem({
   name,
   number,
   spriteUrl,
+  ...otherProps
 }: Props) {
   const colorScheme = useColorScheme();
 
-  console.log("rendering: ", name);
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} {...otherProps}>
       <Image
         source={{
           uri: spriteUrl,
@@ -34,9 +34,9 @@ export default React.memo(function PokemonListItem({
       />
       <View>
         <Text>{name}</Text>
-        <Text style={{opacity:.4}}>#{number}</Text>
+        <Text style={{ opacity: 0.4 }}>#{number}</Text>
       </View>
-    </View>
+    </Pressable>
   );
 });
 

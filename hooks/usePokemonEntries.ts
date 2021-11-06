@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { PokemonClient } from "pokenode-ts";
 
-interface PokemonEntry {
+export interface PokemonEntry {
   name: string;
   number: number;
   spriteUrl: string;

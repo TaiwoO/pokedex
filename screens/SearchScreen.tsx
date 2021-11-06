@@ -6,12 +6,13 @@ import {
   StyleSheet,
   TextInput,
   RefreshControl,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 import useColorScheme from "../hooks/useColorScheme";
-import usePokemonEntries from "../hooks/usePokemonEntries";
+import usePokemonEntries, { PokemonEntry } from "../hooks/usePokemonEntries";
 import { RootTabScreenProps } from "../types";
 
 import Colors from "../constants/Colors";
@@ -24,9 +25,9 @@ export default function SearchScreen({
   const [search, setSearch] = React.useState("");
 
   const [pokemonEntries, isLoading, error, refresh] = usePokemonEntries();
-  const [filteredEntries, setfilteredEntries] = React.useState<
-    typeof pokemonEntries
-  >([]);
+  const [filteredEntries, setfilteredEntries] = React.useState<PokemonEntry[]>(
+    []
+  );
 
   React.useEffect(() => {
     const filtered = pokemonEntries.filter((entry) => {
@@ -39,6 +40,10 @@ export default function SearchScreen({
 
     setfilteredEntries(filtered);
   }, [search, pokemonEntries]);
+
+  const onPressEntry = (pokemonEntry: PokemonEntry) => {
+    navigation.navigate("PokemonModal");
+  };
 
   return (
     // <SafeAreaView style={{ flex: 1 }}>
@@ -59,8 +64,20 @@ export default function SearchScreen({
             ]}
             onChangeText={(x) => setSearch(x)}
             placeholder="Enter pokemon name or number"
+            autoCorrect={false}
             value={search}
           />
+
+          {!!search && (
+            <Pressable onPress={() => setSearch("")} hitSlop={14}>
+              <FontAwesome
+                name="close"
+                color={Colors[colorScheme].text}
+                size={15}
+                style={styles.searchBar__clear}
+              />
+            </Pressable>
+          )}
         </View>
       </View>
 
@@ -72,6 +89,7 @@ export default function SearchScreen({
             name={item.name}
             number={item.number}
             spriteUrl={item.spriteUrl}
+            onPress={() => onPressEntry(item)}
           />
         )}
         ItemSeparatorComponent={() => (
@@ -94,9 +112,6 @@ export default function SearchScreen({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // marginHorizontal: 20,
-    // alignItems: 'center',
-    // justifyContent: 'center',
   },
 
   searchBar: {
@@ -110,8 +125,16 @@ const styles = StyleSheet.create({
   searchBar__icon: {},
   searchBar__input: {
     width: "70%",
+    height: 50,
     paddingHorizontal: 14,
-    paddingVertical: 14,
+    // paddingVertical: 14,
+
+    // borderWidth: 1,
+  },
+  searchBar__clear: {
+    position: "absolute",
+    left: -12,
+    top: -7,
   },
 
   card: {
