@@ -15,7 +15,7 @@ declare global {
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
-  PokemonModal: undefined;
+  PokemonModal: {name: string};
   NotFound: undefined;
 };
 

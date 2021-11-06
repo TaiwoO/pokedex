@@ -16,7 +16,30 @@ import usePokemonEntries, { PokemonEntry } from "../hooks/usePokemonEntries";
 import { RootTabScreenProps } from "../types";
 
 import Colors from "../constants/Colors";
+import Layout from "../constants/Layout";
 import PokemonListItem from "../components/PokemonListItem";
+
+interface LoadingBallProps {
+  show: boolean;
+}
+const LoadingBall = ({ show }: LoadingBallProps) => {
+  return (
+    <Image
+      source={require("../assets/images/pokeball.gif")}
+      style={[
+        {
+          width: 75,
+          height: 75,
+          position: "absolute",
+          bottom: 0,
+          left: Layout.window.width / 2 - 75 / 2,
+          right: "50%",
+        },
+        !show && styles.hide, // Prefered hiding instead of conditional rendering to avoid gif load delay.
+      ]}
+    ></Image>
+  );
+};
 
 export default function SearchScreen({
   navigation,
@@ -28,6 +51,9 @@ export default function SearchScreen({
   const [filteredEntries, setfilteredEntries] = React.useState<PokemonEntry[]>(
     []
   );
+
+  const [pokemonInfo, setPokemonInfo] = React.useState();
+  const [isLoadingPokemonInfo, setIsLoadingPokemonInfo] = React.useState(false);
 
   React.useEffect(() => {
     const filtered = pokemonEntries.filter((entry) => {
@@ -41,9 +67,16 @@ export default function SearchScreen({
     setfilteredEntries(filtered);
   }, [search, pokemonEntries]);
 
-  const onPressEntry = (pokemonEntry: PokemonEntry) => {
-    navigation.navigate("PokemonModal");
+  const onPressEntry = async (pokemonEntry: PokemonEntry) => {
+    console.log("clicked");
+    setIsLoadingPokemonInfo(true);
+    await new Promise((res) => setTimeout(res, 2000));
+    setIsLoadingPokemonInfo(false);
+
+    navigation.navigate("PokemonModal", { name: pokemonEntry.name });
   };
+
+  const getEntryKey = (entry: PokemonEntry) => entry.name;
 
   return (
     // <SafeAreaView style={{ flex: 1 }}>
@@ -85,12 +118,13 @@ export default function SearchScreen({
       <FlatList
         data={filteredEntries}
         renderItem={({ item }) => (
-          <PokemonListItem
-            name={item.name}
-            number={item.number}
-            spriteUrl={item.spriteUrl}
-            onPress={() => onPressEntry(item)}
-          />
+          <Pressable onPress={() => onPressEntry(item)}>
+            <PokemonListItem
+              name={item.name}
+              number={item.number}
+              spriteUrl={item.spriteUrl}
+            />
+          </Pressable>
         )}
         ItemSeparatorComponent={() => (
           <View
@@ -99,11 +133,13 @@ export default function SearchScreen({
             darkColor="rgba(255,255,255,0.1)"
           />
         )}
-        keyExtractor={(item) => item.name}
+        keyExtractor={getEntryKey}
         refreshControl={
           <RefreshControl refreshing={isLoading} onRefresh={refresh} />
         }
       />
+
+      <LoadingBall show={isLoadingPokemonInfo} />
     </View>
     // </SafeAreaView>
   );
@@ -153,5 +189,9 @@ const styles = StyleSheet.create({
     // marginVertical: 30,
     height: 1,
     width: "100%",
+  },
+
+  hide: {
+    display: "none",
   },
 });
