@@ -87,6 +87,7 @@ function BottomTabNavigator() {
           <Image
             style={{
               width: 120,
+              height: '100%',
               resizeMode: "contain",
             }}
             source={require("../assets/images/nav-icon.png")}
