@@ -54,7 +54,6 @@ export default function SearchScreen({
     []
   );
 
-  const [pokemonInfo, setPokemonInfo] = React.useState();
   const [isLoadingPokemonInfo, setIsLoadingPokemonInfo] = React.useState(false);
 
   React.useEffect(() => {
@@ -73,10 +72,7 @@ export default function SearchScreen({
     if (isLoadingPokemonInfo) return;
 
     setIsLoadingPokemonInfo(true);
-
     const pokemon = await PokemonClient.getPokemonByName(pokemonEntry.name);
-    console.log("Got pokemon: ", pokemon.name, " \nWeight: ", pokemon.weight);
-
     setIsLoadingPokemonInfo(false);
 
     navigation.navigate("PokemonModal", pokemon);
@@ -169,9 +165,6 @@ const styles = StyleSheet.create({
     width: "70%",
     height: 50,
     paddingHorizontal: 14,
-    // paddingVertical: 14,
-
-    // borderWidth: 1,
   },
   searchBar__clear: {
     position: "absolute",

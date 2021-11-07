@@ -62,7 +62,9 @@ function RootNavigator() {
         component={NotFoundScreen}
         options={{ title: "Oops!" }}
       />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
+      <Stack.Group
+        screenOptions={{ presentation: "modal", headerShown: false }}
+      >
         <Stack.Screen name="PokemonModal" component={PokemonModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
@@ -87,10 +89,10 @@ function BottomTabNavigator() {
           <Image
             style={{
               width: 120,
-              height: '100%',
+              height: "100%",
               resizeMode: "contain",
             }}
-            source={require("../assets/images/nav-icon.png")}
+            source={require("../assets/images/header-icon.png")}
           />
         ),
         headerStyle: {
