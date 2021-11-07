@@ -17,7 +17,7 @@ import { ColorSchemeName, Image, Pressable } from "react-native";
 
 import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
-import ModalScreen from "../screens/ModalScreen";
+import PokemonModalScreen from "../screens/PokemonModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import SearchScreen from "../screens/SearchScreen";
 import TabTwoScreen from "../screens/TabTwoScreen";
@@ -63,7 +63,7 @@ function RootNavigator() {
         options={{ title: "Oops!" }}
       />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="PokemonModal" component={ModalScreen} />
+        <Stack.Screen name="PokemonModal" component={PokemonModalScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

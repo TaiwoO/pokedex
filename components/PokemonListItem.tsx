@@ -15,13 +15,11 @@ export default React.memo(function PokemonListItem({
   name,
   number,
   spriteUrl,
-}: // ...otherProps
-Props) {
+}: Props) {
   const colorScheme = useColorScheme();
 
   console.log("rendering: ", name);
   return (
-    // <Pressable style={styles.container} {...otherProps}>
     <View style={styles.container}>
       <Image
         source={{
@@ -39,7 +37,6 @@ Props) {
         <Text style={{ opacity: 0.4 }}>#{number}</Text>
       </View>
     </View>
-    // </Pressable>
   );
 });
 

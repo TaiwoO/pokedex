@@ -3,21 +3,24 @@ import * as React from "react";
 import {
   FlatList,
   Image,
+  Pressable,
+  RefreshControl,
   StyleSheet,
   TextInput,
-  RefreshControl,
-  Pressable,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import EditScreenInfo from "../components/EditScreenInfo";
-import { Text, View } from "../components/Themed";
+import PokemonListItem from "../components/PokemonListItem";
+import { View } from "../components/Themed";
+import Colors from "../constants/Colors";
+import Layout from "../constants/Layout";
 import useColorScheme from "../hooks/useColorScheme";
 import usePokemonEntries, { PokemonEntry } from "../hooks/usePokemonEntries";
 import { RootTabScreenProps } from "../types";
 
-import Colors from "../constants/Colors";
-import Layout from "../constants/Layout";
-import PokemonListItem from "../components/PokemonListItem";
+import { PokemonClient as _PokemonClient } from "pokenode-ts";
+
+const PokemonClient = new _PokemonClient({
+  cacheOptions: { maxAge: 10000, exclude: { query: false } },
+});
 
 interface LoadingBallProps {
   show: boolean;
@@ -33,7 +36,6 @@ const LoadingBall = ({ show }: LoadingBallProps) => {
           position: "absolute",
           bottom: 0,
           left: Layout.window.width / 2 - 75 / 2,
-          right: "50%",
         },
         !show && styles.hide, // Prefered hiding instead of conditional rendering to avoid gif load delay.
       ]}
@@ -68,12 +70,16 @@ export default function SearchScreen({
   }, [search, pokemonEntries]);
 
   const onPressEntry = async (pokemonEntry: PokemonEntry) => {
-    console.log("clicked");
+    if (isLoadingPokemonInfo) return;
+
     setIsLoadingPokemonInfo(true);
-    await new Promise((res) => setTimeout(res, 2000));
+
+    const pokemon = await PokemonClient.getPokemonByName(pokemonEntry.name);
+    console.log("Got pokemon: ", pokemon.name, " \nWeight: ", pokemon.weight);
+
     setIsLoadingPokemonInfo(false);
 
-    navigation.navigate("PokemonModal", { name: pokemonEntry.name });
+    navigation.navigate("PokemonModal", pokemon);
   };
 
   const getEntryKey = (entry: PokemonEntry) => entry.name;

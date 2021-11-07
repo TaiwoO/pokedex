@@ -6,6 +6,7 @@ import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 
+// TODO: Light theme and update to automatic in setting
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
