@@ -6713,10 +6713,10 @@ pngjs@^5.0.0:
   resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-5.0.0.tgz#e79dd2b215767fd9c04561c01236df960bce7fbb"
   integrity sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==
 
-pokenode-ts@^1.9.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/pokenode-ts/-/pokenode-ts-1.9.0.tgz#011f35e82cbb0cdd242852b932549eb597186102"
-  integrity sha512-dYMagWyuhG7h6Yw6kyw9vjt6Wp+m9sWhWIa8wnr7ZZ9ShzHPbC0/IFXkCPEjGmOHA9wWGNfcew8Vc1jvUap4Dw==
+pokenode-ts@^1.9.1:
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/pokenode-ts/-/pokenode-ts-1.9.1.tgz#1cde6f36fc953563c1484e2d83f7b15c119a17dc"
+  integrity sha512-dameC+UlJvmAhQSwSb1B7QHczJSLID7PZi8MLrGE3Ene6Z84Iv6fU9HUabDLoGAvsybzqFZbEJnCCLjy5PmTPQ==
   dependencies:
     axios "^0.24.0"
     axios-cache-adapter "^2.7.3"
@@ -6905,6 +6905,11 @@ react-native-codegen@^0.0.6:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-pager-view@5.4.6:
+  version "5.4.6"
+  resolved "https://registry.yarnpkg.com/react-native-pager-view/-/react-native-pager-view-5.4.6.tgz#21d16b67136301875da1355dc9d442a4aafab1c7"
+  integrity sha512-yZiG65xlOeC8LOCNF0N8Cdc+MDQGWJnOpsmlHAndWXQhuVPjj4/KnS556BeTddcQ2EqJu/DjL7o8j0hpB+nkVg==
+
 react-native-safe-area-context@3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-3.3.2.tgz#9549a2ce580f2374edb05e49d661258d1b8bcaed"
@@ -6916,6 +6921,11 @@ react-native-screens@~3.8.0:
   integrity sha512-lHrnB/elAoMJKv8O12U6BLgeup4lB6ZKJHEOVuG/D72nv/OE9wUusbou6YCB5tp3YbaSpHflPnkFmHA/vCejpw==
   dependencies:
     warn-once "^0.1.0"
+
+react-native-tab-view@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-tab-view/-/react-native-tab-view-3.1.1.tgz#1f8d7a835ab4f5b1b1407ec8dddc1053b53fa3c6"
+  integrity sha512-M5pRN6utQfytKWoKlKVzg5NbkYu308qNoW1khGTtEOTs1k14p2dHJ/BWOJoJYHKbPVUyZldbG9MFT7gUl4YHnw==
 
 react-native-web@0.17.1:
   version "0.17.1"

@@ -19,7 +19,7 @@ import { RootTabScreenProps } from "../types";
 import { PokemonClient as _PokemonClient } from "pokenode-ts";
 
 const PokemonClient = new _PokemonClient({
-  cacheOptions: { maxAge: 10000, exclude: { query: false } },
+  cacheOptions: { maxAge: 50000, exclude: { query: false } },
 });
 
 interface LoadingBallProps {
