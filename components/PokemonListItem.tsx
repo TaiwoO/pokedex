@@ -18,7 +18,6 @@ export default React.memo(function PokemonListItem({
 }: Props) {
   const colorScheme = useColorScheme();
 
-  console.log("rendering: ", name);
   return (
     <View style={styles.container}>
       <Image

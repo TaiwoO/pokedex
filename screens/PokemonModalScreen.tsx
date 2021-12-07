@@ -22,12 +22,47 @@ import {
 
 const overlayPng = require("../assets/images/pokemon-overlay.png");
 type ColorType = keyof typeof Colors["type"];
+type PokemonData = {
+  id: any;
+  name: string;
+  imgUrl: string;
+  type: string;
+  typeList: Array<string>;
+  species: string;
+  height: {
+    meters: number;
+    cm: number;
+  };
+  weight: {
+    pounds: number;
+    kg: number;
+  };
+  abilties: Array<string>;
+  stat: {
+    hp: number;
+    attack: number;
+    defense: number;
+    "special-attack": number;
+    "special-defense": number;
+    speed: number;
+  };
+};
 
 const extractPokemonData = (pokemon: Pokemon) => {
   const firstType = pokemon.types[0]?.type.name;
   const type: ColorType = Object.keys(Colors.type).includes(firstType)
     ? (firstType as ColorType)
     : "unknown";
+
+  const stat = {
+    hp: 0,
+    attack: 0,
+    defense: 0,
+    "special-attack": 0,
+    "special-defense": 0,
+    speed: 0,
+  };
+  pokemon.stats.forEach((s) => (stat[s.stat.name] = s.base_stat));
 
   return {
     id: pokemon.id,
@@ -45,7 +80,8 @@ const extractPokemonData = (pokemon: Pokemon) => {
       kg: pokemon.weight / 10,
     },
     abilties: pokemon.abilities.map((x) => x.ability.name),
-  };
+    stat,
+  } as PokemonData;
 };
 
 const Bar = ({
@@ -63,7 +99,7 @@ const Bar = ({
         style={{
           // width: "100%",
           height: 5,
-          opacity: 0.6,
+          opacity: 0.4,
           backgroundColor: backgroundColor,
           borderRadius: 999,
         }}
@@ -81,65 +117,113 @@ const Bar = ({
   );
 };
 
-const BaseStats = () => {
+const BaseStats = ({
+  hp = 0,
+  attack = 0,
+  defense = 0,
+  specialAttack = 0,
+  specialDefense = 0,
+  speed = 0,
+  type = "",
+}: {
+  hp: number;
+  attack: number;
+  defense: number;
+  specialAttack: number;
+  specialDefense: number;
+  speed: number;
+  type: string;
+}) => {
+  const total = hp + attack + defense + specialAttack + specialDefense + speed;
+
   return (
     <View
       style={{ flex: 1, alignItems: "center", justifyContent: "space-evenly" }}
     >
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        <Text style={{ flex: 1, marginRight: 14 }}>HP</Text>
-        <Text style={{ flex: 1 }}>a</Text>
+        <Text style={{ flex: 1, marginRight: 14, }}>HP</Text>
+        <Text style={{ flex: 1 }}>{hp}</Text>
         <View style={{ flex: 4 }}>
-          <Bar value={50} color="red" backgroundColor="purple" />
+          <Bar
+            value={(hp / total) * 100}
+            color={Colors.type[type]}
+            backgroundColor={Colors.type[type]}
+          />
         </View>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ flex: 1, marginRight: 14 }}>Attack</Text>
-        <Text style={{ flex: 1 }}>a</Text>
+        <Text style={{ flex: 1 }}>{attack}</Text>
         <View style={{ flex: 4 }}>
-          <Bar value={50} color="red" backgroundColor="purple" />
+          <Bar
+            value={(attack / total) * 100}
+            color={Colors.type[type]}
+            backgroundColor={Colors.type[type]}
+          />
         </View>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ flex: 1, marginRight: 14 }}>Defense</Text>
-        <Text style={{ flex: 1 }}>a</Text>
+        <Text style={{ flex: 1 }}>{defense}</Text>
         <View style={{ flex: 4 }}>
-          <Bar value={50} color="red" backgroundColor="purple" />
+          <Bar
+            value={(defense / total) * 100}
+            color={Colors.type[type]}
+            backgroundColor={Colors.type[type]}
+          />
         </View>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ flex: 1, marginRight: 14 }}>Sp. Atk</Text>
-        <Text style={{ flex: 1 }}>a</Text>
+        <Text style={{ flex: 1 }}>{specialAttack}</Text>
         <View style={{ flex: 4 }}>
-          <Bar value={50} color="red" backgroundColor="purple" />
+          <Bar
+            value={(specialAttack / total) * 100}
+            color={Colors.type[type]}
+            backgroundColor={Colors.type[type]}
+          />
         </View>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ flex: 1, marginRight: 14 }}>Sp. Def</Text>
-        <Text style={{ flex: 1 }}>a</Text>
+        <Text style={{ flex: 1 }}>{specialDefense}</Text>
         <View style={{ flex: 4 }}>
-          <Bar value={50} color="red" backgroundColor="purple" />
+          <Bar
+            value={(specialDefense / total) * 100}
+            color={Colors.type[type]}
+            backgroundColor={Colors.type[type]}
+          />
         </View>
       </View>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ flex: 1, marginRight: 14 }}>Speed</Text>
-        <Text style={{ flex: 1 }}>a</Text>
+        <Text style={{ flex: 1 }}>{speed}</Text>
         <View style={{ flex: 4 }}>
-          <Bar value={50} color="red" backgroundColor="purple" />
+          <Bar
+            value={(speed / total) * 100}
+            color={Colors.type[type]}
+            backgroundColor={Colors.type[type]}
+          />
         </View>
       </View>
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      {/* <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={{ flex: 1, marginRight: 14 }}>Total</Text>
-        <Text style={{ flex: 1 }}>a</Text>
+        <Text style={{ flex: 1 }}>{total}</Text>
         <View style={{ flex: 4 }}>
           <Bar value={50} color="red" backgroundColor="purple" />
         </View>
-      </View>
+      </View> */}
     </View>
   );
 };
 
-const AboutTab = (props) => {
+const AboutTab = React.memo(function AboutTab({
+  weight,
+  height,
+  abilties,
+  stat,
+  type,
+}: PokemonData) {
   const colorScheme = useColorScheme();
 
   return (
@@ -172,7 +256,9 @@ const AboutTab = (props) => {
               <Text style={[{ opacity: 0.6, fontSize: 14 }]}>Weight:</Text>
             </View>
 
-            <Text>6.9kg</Text>
+            <Text>
+              {weight.pounds.toFixed(2)} lbs ({weight.kg.toFixed(1)} kg)
+            </Text>
           </View>
         </View>
 
@@ -187,7 +273,7 @@ const AboutTab = (props) => {
             <Text style={[{ opacity: 0.6, fontSize: 14 }]}>Height:</Text>
           </View>
 
-          <Text>6.99kg</Text>
+          <Text>{height.meters} m</Text>
         </View>
 
         <View>
@@ -204,7 +290,7 @@ const AboutTab = (props) => {
             style={{ maxHeight: 52 }}
             showsVerticalScrollIndicator={false}
           >
-            {["Overgrow", "CHrolophly", "dsdsdsds"].map((ability) => (
+            {abilties.map((ability) => (
               <Text key={ability} style={{ textAlign: "center" }}>
                 {ability}
               </Text>
@@ -213,17 +299,35 @@ const AboutTab = (props) => {
         </View>
       </View>
 
-      <BaseStats />
+      <BaseStats
+        hp={stat.hp}
+        attack={stat.attack}
+        defense={stat.defense}
+        specialAttack={stat["special-attack"]}
+        specialDefense={stat["special-defense"]}
+        speed={stat.speed}
+        type={type}
+      />
     </View>
   );
-};
+});
 
 const EvolutionTab = () => <View style={{ flex: 1 }} />;
 
-const renderScene = SceneMap({
-  about: AboutTab,
-  evolution: EvolutionTab,
-});
+// const renderScene = SceneMap({
+//   about: AboutTab,
+//   evolution: EvolutionTab,
+// });
+const renderScene = ({ route }, pokemonData: PokemonData) => {
+  switch (route.key) {
+    case "about":
+      return <AboutTab {...pokemonData} />;
+    case "evolution":
+      return <EvolutionTab />;
+    default:
+      return null;
+  }
+};
 
 export default function ModalScreen({
   navigation,
@@ -281,7 +385,9 @@ export default function ModalScreen({
         <View style={[styles.content]}>
           <TabView
             navigationState={{ index: tabIndex, routes: tabRoutes }}
-            renderScene={renderScene}
+            renderScene={(tabViewProps) =>
+              renderScene(tabViewProps, pokemonData)
+            }
             // renderScene={(props) => renderScene({...props, yoo:'Need to make renderSchee a function so I can pass extra stuff?'})}
 
             onIndexChange={setIndex}
